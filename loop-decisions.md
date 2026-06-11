@@ -13,6 +13,10 @@ Use this file for decisions that should survive across loop runs.
   personal GitHub namespace.
 - The package payload stays lean; self-installed repo loop files are committed
   for dogfooding but excluded from npm by the `files` allowlist.
+- `dog-food` is the main command. `init`, `check`, and `prompt` remain
+  supporting commands.
+- `dog-food create` can turn Markdown plans into visible loop state; `dog-food
+  run` and bare `dog-food <object>` print guarded agent handoffs.
 
 ## Rejected Patterns
 

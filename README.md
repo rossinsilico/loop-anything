@@ -8,8 +8,8 @@ daemon, not a hosted service, and not another prompt pile. It gives agents a
 small operating model they can resume from.
 
 ```bash
-npx loop-anything init --agent both
-npx loop-anything check --agent both
+node bin/loop-anything.js dog-food spec --turn single
+node bin/loop-anything.js check --agent both
 ```
 
 ## Why
@@ -18,14 +18,15 @@ One-off prompts are easy to start and hard to resume. Every new agent session
 has to rediscover the goal, boundaries, state, review expectations, and proof
 commands.
 
-Loop Anything makes orchestration easier by installing those pieces in one
-command:
+Loop Anything makes orchestration easier by turning a work object into a visible
+loop:
 
 - native Codex and Claude skill folders
 - one shared state board
 - one shared loop contract
 - one reviewer role
-- one check command
+- one dog-food command for specs, plans, patterns, and repo surfaces
+- one check command for proof
 
 It makes orchestration more powerful by turning "keep going" into a stage
 machine:
@@ -43,6 +44,7 @@ For Codex:
 
 ```text
 .agents/skills/loop-triage/SKILL.md
+.agents/skills/loop-dog-food/SKILL.md
 .agents/skills/loop-review/SKILL.md
 .agents/skills/loop-prove/SKILL.md
 .agents/skills/loop-record/SKILL.md
@@ -52,6 +54,7 @@ For Claude:
 
 ```text
 .claude/skills/loop-triage/SKILL.md
+.claude/skills/loop-dog-food/SKILL.md
 .claude/skills/loop-review/SKILL.md
 .claude/skills/loop-prove/SKILL.md
 .claude/skills/loop-record/SKILL.md
@@ -73,38 +76,61 @@ board. That is the point: separate tool installs, one shared loop.
 
 ## Install Modes
 
-From a package registry:
+Current source checkout:
 
 ```bash
-# Codex only
-npx loop-anything init --agent codex
-npx loop-anything check --agent codex
+node bin/loop-anything.js dog-food spec --turn single
+node bin/loop-anything.js init --agent both --dir /tmp/example-loop
+node bin/loop-anything.js check --agent both --dir /tmp/example-loop
+```
 
-# Claude only
-npx loop-anything init --agent claude
-npx loop-anything check --agent claude
+After registry publication:
 
-# Both
+```bash
+npx loop-anything dog-food spec --turn single
 npx loop-anything init --agent both
 npx loop-anything check --agent both
 ```
 
-Local checkout usage:
+Target one agent when needed:
 
 ```bash
-node bin/loop-anything.js init --agent both --dir /tmp/example-loop
-node bin/loop-anything.js check --agent both --dir /tmp/example-loop
+node bin/loop-anything.js init --agent codex
+node bin/loop-anything.js check --agent codex
+
+# Claude only
+node bin/loop-anything.js init --agent claude
+node bin/loop-anything.js check --agent claude
+```
+
+Create loop state from a plan or spec:
+
+```bash
+node bin/loop-anything.js dog-food create plan --from docs/product-brief.md --turn multi
 ```
 
 Preview writes without creating files:
 
 ```bash
-npx loop-anything init --agent both --dry-run
+node bin/loop-anything.js init --agent both --dry-run
 ```
 
-For a source checkout, use `node bin/loop-anything.js ...`.
-
 ## Commands
+
+### `dog-food`
+
+```bash
+loop-anything dog-food [prompt|create|run] [object words...] [--from path] [--turn single|multi|infinite]
+```
+
+The main command. It treats a spec, plan, orchestration pattern, branch, issue,
+repo area, or other compute-willing object as the loop target.
+
+- `dog-food spec --turn single` prints the next Codex and Claude handoff.
+- `dog-food create plan --from plan.md --turn multi` creates loop state from a
+  Markdown plan.
+- `dog-food run orchestration pattern --turn infinite` prints a guarded run
+  prompt that continues only while review, proof, and permission gates hold.
 
 ### `init`
 
@@ -138,6 +164,7 @@ Prints an agent-native handoff prompt for the next loop stage. Codex gets
 Loop Anything is useful because it adds a little process, not a lot of runtime.
 The process is the product.
 
+- `loop-dog-food`: turn a work object into a bounded loop
 - `loop-triage`: choose one bounded task and name the proof command
 - `loop-review`: check scope, diff, permissions, and secret risk
 - `loop-prove`: run and record the proof command
@@ -149,14 +176,24 @@ The full contract lives in `loop-contract.md`:
 observe -> triage -> plan -> act -> review -> prove -> record -> stop
 ```
 
-`loop-prompts.md` and `loop-anything prompt` give you stage-specific handoffs
-so the next run can resume without rethinking the process.
+`loop-prompts.md`, `loop-anything prompt`, and `loop-anything dog-food` give you
+stage-specific handoffs so the next run can resume without rethinking the
+process.
 
 ## Dogfooding
+
+Dog food is all that matters: the package should prove its own loop before it
+asks another repo to trust the loop.
 
 This repo installs Loop Anything into itself. The checked-in `.agents/`,
 `.claude/`, `loop-state.md`, `loop-contract.md`, and `loop-prompts.md` files are
 the same scaffold the package generates for other projects.
+
+The repo dogfoods itself with:
+
+```bash
+node bin/loop-anything.js dog-food run "loop-anything package" --turn multi
+```
 
 ## Safety Defaults
 

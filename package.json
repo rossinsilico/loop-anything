@@ -1,6 +1,6 @@
 {
   "name": "loop-anything",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Make Codex and Claude loop orchestration easier and more powerful.",
   "type": "commonjs",
   "bin": {

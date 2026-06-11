@@ -1,8 +1,8 @@
 {
   "name": "loop-anything",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Bounded agent loop scaffold with visible state, review, and proof.",
-  "skills": ["loop-triage", "loop-review", "loop-prove", "loop-record"],
+  "skills": ["loop-dog-food", "loop-triage", "loop-review", "loop-prove", "loop-record"],
   "state": ["loop-state.md", "loop-decisions.md", "loop-contract.md", "loop-prompts.md"],
   "reviewers": ["loop-reviewer"],
   "stages": ["observe", "triage", "plan", "act", "review", "prove", "record", "stop"],

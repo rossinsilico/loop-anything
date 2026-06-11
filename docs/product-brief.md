@@ -11,15 +11,15 @@ minute.
 ## One-Liner
 
 `loop-anything` makes agent loop orchestration easier and more powerful by
-installing a shared loop contract for Codex and Claude: stage skills, shared
-state, reviewer prompts, and proof gates inside any repo.
+turning a spec, plan, orchestration pattern, or repo surface into a bounded
+dogfood loop with shared state, reviewer prompts, and proof gates.
 
 ## GitHub Headline
 
 ```text
-npx loop-anything init
+loop-anything dog-food spec --turn single
 
-Turn any repo into a bounded agent loop: state, skills, review, proof.
+Turn any work object into a bounded agent loop: state, review, proof, record.
 ```
 
 ## Why This Can Travel
@@ -30,19 +30,20 @@ re-explaining context, rules, review expectations, and proof commands.
 
 The viral wedge is not "agent loops are important." The wedge is:
 
-> Here is the command that installs a shared loop contract for Codex and Claude.
+> Here is the command that turns a spec, plan, or repo surface into a bounded
+> dogfood loop for Codex and Claude.
 
 ## Product Shape
 
 Ship a dependency-light JavaScript CLI package with Markdown templates.
 
 ```bash
-npx loop-anything init
-npx loop-anything init --agent codex
-npx loop-anything init --agent claude
-npx loop-anything init --agent both
-npx loop-anything check
-npx loop-anything prompt --agent both --stage triage
+node bin/loop-anything.js dog-food spec --turn single
+node bin/loop-anything.js dog-food create plan --from docs/product-brief.md --turn multi
+node bin/loop-anything.js dog-food run "orchestration pattern" --turn infinite
+node bin/loop-anything.js init --agent both
+node bin/loop-anything.js check
+node bin/loop-anything.js prompt --agent both --stage triage
 ```
 
 Default behavior:
@@ -54,6 +55,7 @@ Default behavior:
 - create a reviewer prompt for Claude
 - create a proof-first stage contract
 - print the next check command
+- create visible loop state from a Markdown spec or plan
 - print agent-native stage prompts on demand
 
 The CLI implements the Agent Loop Skill Pack Standard in
@@ -65,11 +67,14 @@ The differentiator is the orchestration model in `docs/orchestration-model.md`:
 each loop moves through named stages, records state, separates maker and
 reviewer roles, and stops at explicit gates.
 
+Brand thesis: dog food is all that matters. The package has to run its own loop
+cleanly before asking another repo to trust it.
+
 ## Value Proposition
 
 Easier:
 
-- one command to install the loop shape
+- one command to dogfood a spec, plan, pattern, or repo surface
 - no daemon, account, scheduler, or secret store
 - native Codex and Claude project folders
 - one shared state board
@@ -77,6 +82,7 @@ Easier:
 More powerful:
 
 - stage-by-stage loop control
+- single, multi, and infinite turn budgets with hard stop conditions
 - maker/reviewer separation
 - proof gates before completion claims
 - durable decisions and next actions
@@ -96,6 +102,7 @@ loop-pack/
     loop-prompts.md
     loop-runs/.gitkeep
   skills/
+    loop-dog-food/SKILL.md
     loop-triage/SKILL.md
     loop-review/SKILL.md
     loop-prove/SKILL.md
@@ -109,6 +116,7 @@ For Codex:
 ```text
 .agents/
   skills/
+    loop-dog-food/SKILL.md
     loop-triage/SKILL.md
     loop-review/SKILL.md
     loop-prove/SKILL.md
@@ -125,6 +133,7 @@ For Claude:
 ```text
 .claude/
   skills/
+    loop-dog-food/SKILL.md
     loop-triage/SKILL.md
     loop-review/SKILL.md
     loop-prove/SKILL.md
@@ -157,8 +166,19 @@ active task, proof history, and next action.
 
 ### Stage Skills
 
-Stage skills govern one part of the loop. The v0 package ships `loop-triage`,
-`loop-review`, `loop-prove`, and `loop-record`.
+Stage skills govern one part of the loop. The package ships `loop-dog-food`,
+`loop-triage`, `loop-review`, `loop-prove`, and `loop-record`.
+
+### Dog Food Command
+
+`loop-anything dog-food` is the front door.
+
+- `dog-food spec --turn single` prints an agent-native handoff for one bounded
+  loop.
+- `dog-food create plan --from plan.md --turn multi` creates visible loop state
+  from a Markdown plan.
+- `dog-food run "orchestration pattern" --turn infinite` emits a guarded run
+  prompt that continues only while permission, review, and proof gates hold.
 
 ### Reviewer Prompt
 
@@ -194,6 +214,7 @@ bin/
 src/
   cli.js
   detect.js
+  dogfood.js
   render.js
   check.js
   prompts.js
@@ -204,6 +225,7 @@ templates/
     shared/loop-decisions.md
     shared/loop-contract.md
     shared/loop-prompts.md
+    skills/loop-dog-food/SKILL.md
     skills/loop-triage/SKILL.md
     skills/loop-review/SKILL.md
     skills/loop-prove/SKILL.md
@@ -216,6 +238,21 @@ docs/
 ```
 
 ## CLI Behavior
+
+### `dog-food`
+
+Inputs:
+
+- method: `prompt`, `create`, or `run`; default `prompt`
+- object words, default `current repo`
+- `--from <path>` for Markdown source when using `create`
+- `--turn single|multi|infinite`, default `single`
+- `--agent codex|claude|both`, default `both`
+
+Output:
+
+- prompt/run methods print Codex and/or Claude handoff text
+- create method writes `loop-state.md` from the supplied work object
 
 ### `init`
 
@@ -279,8 +316,9 @@ Release `loop-anything` when:
 2. `node bin/loop-anything.js init --agent both --dir /tmp/loop-anything-test`
    writes the expected files.
 3. `node bin/loop-anything.js check --dir /tmp/loop-anything-test` exits 0.
-4. Generated files include the loop contract and four stage skills:
-   `loop-triage`, `loop-review`, `loop-prove`, and `loop-record`.
+4. Generated files include the loop contract and five skills:
+   `loop-dog-food`, `loop-triage`, `loop-review`, `loop-prove`, and
+   `loop-record`.
 5. `npm test`, `sh scripts/validate.sh`, and `npm pack --dry-run` pass.
 6. README shows the two-command path.
 7. No generated file contains credentials, private data, or marker text.

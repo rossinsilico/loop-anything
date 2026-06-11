@@ -30,6 +30,26 @@ test("parseArgs accepts prompt stage arguments", () => {
   assert.equal(args.stage, "review");
 });
 
+test("parseArgs accepts dog-food object and turn budget", () => {
+  const args = parseArgs(["dog-food", "orchestration", "pattern", "--agent", "codex", "--turn", "multi"]);
+
+  assert.equal(args.command, "dog-food");
+  assert.equal(args.method, "prompt");
+  assert.equal(args.agent, "codex");
+  assert.equal(args.object, "orchestration pattern");
+  assert.equal(args.turn, "multi");
+});
+
+test("parseArgs accepts dog-food create method and source file", () => {
+  const args = parseArgs(["dog-food", "create", "plan", "--from", "docs/product-brief.md", "--turn", "multi"]);
+
+  assert.equal(args.command, "dog-food");
+  assert.equal(args.method, "create");
+  assert.equal(args.object, "plan");
+  assert.equal(args.from, "docs/product-brief.md");
+  assert.equal(args.turn, "multi");
+});
+
 test("dry-run lists planned writes without creating files", () => {
   const dir = makeTempDir();
   const result = installLoop({ agent: "codex", dir, dryRun: true });
@@ -44,7 +64,9 @@ test("install both writes Codex, Claude, and shared state", () => {
 
   assert.equal(result.skipped.length, 0);
   assert.ok(fs.existsSync(path.join(dir, ".agents/skills/loop-triage/SKILL.md")));
+  assert.ok(fs.existsSync(path.join(dir, ".agents/skills/loop-dog-food/SKILL.md")));
   assert.ok(fs.existsSync(path.join(dir, ".claude/skills/loop-record/SKILL.md")));
+  assert.ok(fs.existsSync(path.join(dir, ".claude/skills/loop-dog-food/SKILL.md")));
   assert.ok(fs.existsSync(path.join(dir, ".claude/agents/loop-reviewer.md")));
   assert.ok(fs.existsSync(path.join(dir, "loop-state.md")));
   assert.ok(fs.existsSync(path.join(dir, "loop-contract.md")));
@@ -93,6 +115,45 @@ test("prompt command prints agent-native stage handoffs", () => {
   assert.match(stdout.output(), /\$loop-triage/);
   assert.match(stdout.output(), /\/loop-triage/);
   assert.match(stdout.output(), /loop-state\.md/);
+});
+
+test("dog-food command prints object-scoped loop handoffs", () => {
+  const stdout = createWriter();
+  const stderr = createWriter();
+
+  const code = main(["dog-food", "spec", "--agent", "both", "--turn", "single"], {
+    cwd: process.cwd(),
+    stdout,
+    stderr
+  });
+
+  assert.equal(code, 0, stderr.output());
+  assert.match(stdout.output(), /\$loop-anything\.dog-food spec/);
+  assert.match(stdout.output(), /\/loop-anything\.dog-food spec/);
+  assert.match(stdout.output(), /Turn budget: single/);
+  assert.match(stdout.output(), /loop-state\.md/);
+});
+
+test("dog-food create turns a markdown plan into loop state", () => {
+  const dir = makeTempDir();
+  const planPath = path.join(dir, "plan.md");
+  fs.writeFileSync(planPath, "# Plan\n\nMake loop orchestration easier.\n", "utf8");
+  const stdout = createWriter();
+  const stderr = createWriter();
+
+  const code = main(["dog-food", "create", "plan", "--from", planPath, "--dir", dir, "--turn", "multi"], {
+    cwd: process.cwd(),
+    stdout,
+    stderr
+  });
+
+  assert.equal(code, 0, stderr.output());
+  assert.match(stdout.output(), /wrote: loop-state\.md/);
+  const state = fs.readFileSync(path.join(dir, "loop-state.md"), "utf8");
+  assert.match(state, /Dog-food plan/);
+  assert.match(state, /Source: plan\.md/);
+  assert.match(state, /Turn budget: multi/);
+  assert.match(state, /Make loop orchestration easier/);
 });
 
 test("force with backup overwrites generated files and writes backups", () => {
@@ -146,7 +207,8 @@ test("CLI main installs and checks a target directory", () => {
 test("README uses package-neutral install commands", () => {
   const readme = fs.readFileSync(path.resolve(__dirname, "..", "README.md"), "utf8");
 
-  assert.match(readme, /npx loop-anything init --agent both/);
+  assert.match(readme, /node bin\/loop-anything\.js dog-food spec --turn single/);
+  assert.match(readme, /After registry publication:/);
   assert.doesNotMatch(readme, /npx\s+github:[^\s]+\/loop-anything/);
 });
 

@@ -6,6 +6,29 @@ Every loop iteration follows this stage order:
 observe -> triage -> plan -> act -> review -> prove -> record -> stop
 ```
 
+## Dog Food
+
+Turn a named work object into a bounded loop.
+
+Input examples:
+
+- spec
+- plan
+- orchestration pattern
+- repo surface
+- issue or branch
+
+Output:
+
+- object
+- turn budget
+- selected task
+- proof command
+- stop condition
+
+Stop if the object is too vague to prove or the requested turn budget would
+bypass review, proof, or permission gates.
+
 ## Observe
 
 Read the state board, repository state, and any named external surface.

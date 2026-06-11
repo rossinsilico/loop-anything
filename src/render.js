@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 
 const TEMPLATE_ROOT = path.resolve(__dirname, "..", "templates", "loop-pack");
-const STAGE_SKILLS = ["loop-triage", "loop-review", "loop-prove", "loop-record"];
+const STAGE_SKILLS = ["loop-dog-food", "loop-triage", "loop-review", "loop-prove", "loop-record"];
 const SHARED_FILES = [
   "loop-state.md",
   "loop-decisions.md",

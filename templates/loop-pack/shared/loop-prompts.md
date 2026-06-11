@@ -2,6 +2,28 @@
 
 Use these prompts to start or resume a loop after installing the pack.
 
+## Dog Food An Object
+
+Codex:
+
+```text
+$loop-anything.dog-food spec
+Object: spec
+Turn budget: single
+Read loop-state.md, loop-contract.md, loop-decisions.md, and loop-prompts.md.
+Choose one bounded task, name proof before acting, and record the result.
+```
+
+Claude:
+
+```text
+/loop-anything.dog-food spec
+Object: spec
+Turn budget: single
+Read loop-state.md, loop-contract.md, loop-decisions.md, and loop-prompts.md.
+Choose one bounded task, name proof before acting, and record the result.
+```
+
 ## Start With Triage
 
 Codex:

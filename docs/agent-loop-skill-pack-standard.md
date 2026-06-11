@@ -36,6 +36,7 @@ loop-pack/
     loop-prompts.md
     loop-runs/.gitkeep
   skills/
+    loop-dog-food/SKILL.md
     loop-triage/SKILL.md
     loop-review/SKILL.md
     loop-prove/SKILL.md
@@ -51,9 +52,9 @@ The manifest describes the pack without depending on one agent vendor.
 ```json
 {
   "name": "loop-anything",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Bounded agent loop scaffold with visible state, review, and proof.",
-  "skills": ["loop-triage", "loop-review", "loop-prove", "loop-record"],
+  "skills": ["loop-dog-food", "loop-triage", "loop-review", "loop-prove", "loop-record"],
   "state": ["loop-state.md", "loop-decisions.md", "loop-contract.md", "loop-prompts.md"],
   "reviewers": ["loop-reviewer"],
   "stages": ["observe", "triage", "plan", "act", "review", "prove", "record", "stop"],
@@ -113,16 +114,17 @@ The contract turns a folder scaffold into an orchestration system. It tells the
 agent what each stage reads, what each stage writes, which proof is required,
 and when the loop must stop for human input.
 
-The v0 installer generates four stage skills:
+The v0 installer generates five skills:
 
+- `loop-dog-food`: turn a work object into a bounded loop
 - `loop-triage`: choose one bounded task
 - `loop-review`: check state, diff, permissions, and secret risk
 - `loop-prove`: run and record the proof command
 - `loop-record`: update state and next action
 
 It also generates `loop-prompts.md`, a human-readable prompt menu for Codex and
-Claude stage handoffs. The same text is available through
-`loop-anything prompt`.
+Claude stage handoffs. The same text is available through `loop-anything prompt`
+and the object-scoped front door is available through `loop-anything dog-food`.
 
 ## Codex Install Spec
 
@@ -133,6 +135,7 @@ Codex project skills install under `.agents/skills`.
 ```text
 .agents/
   skills/
+    loop-dog-food/SKILL.md
     loop-triage/SKILL.md
     loop-review/SKILL.md
     loop-prove/SKILL.md
@@ -149,6 +152,7 @@ loop-runs/
 ```text
 $HOME/.agents/
   skills/
+    loop-dog-food/SKILL.md
     loop-triage/SKILL.md
     loop-review/SKILL.md
     loop-prove/SKILL.md
@@ -173,6 +177,7 @@ personal workflows that should be available across repositories.
 `loop-anything check --agent codex` should verify:
 
 - `.agents/skills/loop-triage/SKILL.md` exists
+- `.agents/skills/loop-dog-food/SKILL.md` exists
 - `.agents/skills/loop-review/SKILL.md` exists
 - `.agents/skills/loop-prove/SKILL.md` exists
 - `.agents/skills/loop-record/SKILL.md` exists
@@ -181,7 +186,7 @@ personal workflows that should be available across repositories.
 - `loop-state.md` includes `Current Goal`, `Queue`, `Proof History`, and
   `Next Action`
 - `loop-contract.md` includes the stage order
-- `loop-prompts.md` includes Codex and Claude triage prompts
+- `loop-prompts.md` includes Codex and Claude dogfood and triage prompts
 
 ## Claude Install Spec
 
@@ -192,6 +197,7 @@ Claude project skills install under `.claude/skills`.
 ```text
 .claude/
   skills/
+    loop-dog-food/SKILL.md
     loop-triage/SKILL.md
     loop-review/SKILL.md
     loop-prove/SKILL.md
@@ -210,6 +216,7 @@ loop-runs/
 ```text
 $HOME/.claude/
   skills/
+    loop-dog-food/SKILL.md
     loop-triage/SKILL.md
     loop-review/SKILL.md
     loop-prove/SKILL.md
@@ -235,6 +242,7 @@ operator habits.
 `loop-anything check --agent claude` should verify:
 
 - `.claude/skills/loop-triage/SKILL.md` exists
+- `.claude/skills/loop-dog-food/SKILL.md` exists
 - `.claude/skills/loop-review/SKILL.md` exists
 - `.claude/skills/loop-prove/SKILL.md` exists
 - `.claude/skills/loop-record/SKILL.md` exists
@@ -244,7 +252,7 @@ operator habits.
 - `loop-state.md` includes `Current Goal`, `Queue`, `Proof History`, and
   `Next Action`
 - `loop-contract.md` includes the stage order
-- `loop-prompts.md` includes Codex and Claude triage prompts
+- `loop-prompts.md` includes Codex and Claude dogfood and triage prompts
 
 ## Both-Target Install Spec
 
@@ -284,31 +292,47 @@ With `--force`:
 
 ## Standalone Install Commands
 
+Current source checkout:
+
+```bash
+node bin/loop-anything.js dog-food spec --turn single
+node bin/loop-anything.js init --agent both
+node bin/loop-anything.js check --agent both
+```
+
+After registry publication:
+
+```bash
+npx loop-anything dog-food spec --turn single
+npx loop-anything init --agent both
+npx loop-anything check --agent both
+```
+
 ### Codex Only
 
 ```bash
-npx loop-anything init --agent codex
-npx loop-anything check --agent codex
+node bin/loop-anything.js init --agent codex
+node bin/loop-anything.js check --agent codex
 ```
 
 ### Claude Only
 
 ```bash
-npx loop-anything init --agent claude
-npx loop-anything check --agent claude
+node bin/loop-anything.js init --agent claude
+node bin/loop-anything.js check --agent claude
 ```
 
 ### Both
 
 ```bash
-npx loop-anything init --agent both
-npx loop-anything check --agent both
+node bin/loop-anything.js init --agent both
+node bin/loop-anything.js check --agent both
 ```
 
 ### Dry Run
 
 ```bash
-npx loop-anything init --agent both --dry-run
+node bin/loop-anything.js init --agent both --dry-run
 ```
 
 ## Compatibility Notes

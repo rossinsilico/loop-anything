@@ -10,7 +10,13 @@ const REQUIRED_STATE_HEADINGS = [
   "## Proof History",
   "## Next Action"
 ];
-const REQUIRED_PROMPT_TEXT = ["$loop-triage", "/loop-triage", "loop-state.md"];
+const REQUIRED_PROMPT_TEXT = [
+  "$loop-anything.dog-food",
+  "/loop-anything.dog-food",
+  "$loop-triage",
+  "/loop-triage",
+  "loop-state.md"
+];
 
 const MARKER_PATTERN = /\b(TBD|TODO|FIXME|INSERT_|YOUR_|PLACEHOLDER)\b/;
 const SECRET_PATTERNS = [

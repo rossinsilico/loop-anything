@@ -3,8 +3,8 @@
 ## Current Goal
 
 Use Loop Anything to improve Loop Anything: keep the package owner-neutral,
-make orchestration easier and more powerful, and verify every publish step with
-the package's own loop checks.
+make `dog-food` the main command, and verify every publish step with the
+package's own loop checks.
 
 ## Boundaries
 
@@ -17,12 +17,12 @@ the package's own loop checks.
 
 | Status | Task | Proof Command | Notes |
 | --- | --- | --- | --- |
-| proof green | Improve package orchestration and owner-neutral install docs | `npm test && sh scripts/validate.sh && node bin/loop-anything.js check --agent both` | Ready to commit and push |
+| proof green | Make `dog-food` the front-door orchestration command | `npm test && sh scripts/validate.sh && node bin/loop-anything.js check --agent both` | Ready to commit and push |
 
 ## Active Task
 
-- Task: Improve package orchestration and owner-neutral install docs
-- Reason: the first public release worked, but install docs were tied to a GitHub owner and the orchestration layer needed a stronger prompt handoff
+- Task: Make `dog-food` the front-door orchestration command
+- Reason: the strongest product shape is goal-setting plus orchestration: turn a spec, plan, pattern, or repo surface into a bounded loop object
 - Expected files or services: package source, docs, generated self-loop files, GitHub repository
 - Proof command: `npm test && sh scripts/validate.sh && node bin/loop-anything.js check --agent both`
 - Stop condition: stop if tests fail, validation fails, GitHub push fails, or a registry publish is required without authentication
@@ -34,6 +34,8 @@ the package's own loop checks.
 | 2026-06-11 | `npm test` | pass | 13 tests passed |
 | 2026-06-11 | `sh scripts/validate.sh` | pass | Temp install/check, prompt smoke, and `npm pack --dry-run` passed |
 | 2026-06-11 | `node bin/loop-anything.js check --agent both` | pass | Self-installed repo scaffold passed |
+| 2026-06-11 | `npm test` | pass | 17 tests passed for `dog-food` command family |
+| 2026-06-11 | `sh scripts/validate.sh` | pass | v0.3 dogfood smoke passed with temp npm cache |
 
 ## Decisions
 
@@ -42,7 +44,9 @@ the package's own loop checks.
 - Keep agent-specific instructions in skill files, not in this state board.
 - Keep public install docs owner-neutral.
 - Keep the npm package payload lean while allowing the GitHub repo to dogfood its own loop files.
+- Treat `dog-food` as the main command; keep `init`, `check`, and `prompt` as supporting plumbing.
+- Keep validation hermetic by using a temp npm cache during package smoke.
 
 ## Next Action
 
-Commit the second release, push to GitHub, then verify the public repository state.
+Commit the v0.3 dogfood pass, push to GitHub, then verify the public repository state.
