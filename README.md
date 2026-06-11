@@ -8,8 +8,8 @@ daemon, not a hosted service, and not another prompt pile. It gives agents a
 small operating model they can resume from.
 
 ```bash
-npx github:rossinsilico/loop-anything init --agent both
-npx github:rossinsilico/loop-anything check --agent both
+npx loop-anything init --agent both
+npx loop-anything check --agent both
 ```
 
 ## Why
@@ -64,6 +64,7 @@ Shared state:
 loop-state.md
 loop-decisions.md
 loop-contract.md
+loop-prompts.md
 loop-runs/
 ```
 
@@ -72,20 +73,20 @@ board. That is the point: separate tool installs, one shared loop.
 
 ## Install Modes
 
-From GitHub:
+From a package registry:
 
 ```bash
 # Codex only
-npx github:rossinsilico/loop-anything init --agent codex
-npx github:rossinsilico/loop-anything check --agent codex
+npx loop-anything init --agent codex
+npx loop-anything check --agent codex
 
 # Claude only
-npx github:rossinsilico/loop-anything init --agent claude
-npx github:rossinsilico/loop-anything check --agent claude
+npx loop-anything init --agent claude
+npx loop-anything check --agent claude
 
 # Both
-npx github:rossinsilico/loop-anything init --agent both
-npx github:rossinsilico/loop-anything check --agent both
+npx loop-anything init --agent both
+npx loop-anything check --agent both
 ```
 
 Local checkout usage:
@@ -98,10 +99,10 @@ node bin/loop-anything.js check --agent both --dir /tmp/example-loop
 Preview writes without creating files:
 
 ```bash
-npx github:rossinsilico/loop-anything init --agent both --dry-run
+npx loop-anything init --agent both --dry-run
 ```
 
-After an npm release, the command becomes `npx loop-anything ...`.
+For a source checkout, use `node bin/loop-anything.js ...`.
 
 ## Commands
 
@@ -123,6 +124,15 @@ loop-anything check [--agent codex|claude|both] [--dir path] [--state-dir path]
 Validates required files, skill frontmatter, state-board headings, stage order,
 and obvious marker or secret-looking values.
 
+### `prompt`
+
+```bash
+loop-anything prompt [--agent codex|claude|both] [--stage triage|review|prove|record|resume]
+```
+
+Prints an agent-native handoff prompt for the next loop stage. Codex gets
+`$loop-*` invocations. Claude gets `/loop-*` invocations.
+
 ## The Orchestration Contract
 
 Loop Anything is useful because it adds a little process, not a lot of runtime.
@@ -138,6 +148,15 @@ The full contract lives in `loop-contract.md`:
 ```text
 observe -> triage -> plan -> act -> review -> prove -> record -> stop
 ```
+
+`loop-prompts.md` and `loop-anything prompt` give you stage-specific handoffs
+so the next run can resume without rethinking the process.
+
+## Dogfooding
+
+This repo installs Loop Anything into itself. The checked-in `.agents/`,
+`.claude/`, `loop-state.md`, `loop-contract.md`, and `loop-prompts.md` files are
+the same scaffold the package generates for other projects.
 
 ## Safety Defaults
 
@@ -180,6 +199,7 @@ Useful references:
 ```bash
 npm test
 sh scripts/validate.sh
+node bin/loop-anything.js check --agent both
 npm pack --dry-run
 ```
 

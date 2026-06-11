@@ -17,7 +17,7 @@ state, reviewer prompts, and proof gates inside any repo.
 ## GitHub Headline
 
 ```text
-npx github:rossinsilico/loop-anything init
+npx loop-anything init
 
 Turn any repo into a bounded agent loop: state, skills, review, proof.
 ```
@@ -37,11 +37,12 @@ The viral wedge is not "agent loops are important." The wedge is:
 Ship a dependency-light JavaScript CLI package with Markdown templates.
 
 ```bash
-npx github:rossinsilico/loop-anything init
-npx github:rossinsilico/loop-anything init --agent codex
-npx github:rossinsilico/loop-anything init --agent claude
-npx github:rossinsilico/loop-anything init --agent both
-npx github:rossinsilico/loop-anything check
+npx loop-anything init
+npx loop-anything init --agent codex
+npx loop-anything init --agent claude
+npx loop-anything init --agent both
+npx loop-anything check
+npx loop-anything prompt --agent both --stage triage
 ```
 
 Default behavior:
@@ -53,6 +54,7 @@ Default behavior:
 - create a reviewer prompt for Claude
 - create a proof-first stage contract
 - print the next check command
+- print agent-native stage prompts on demand
 
 The CLI implements the Agent Loop Skill Pack Standard in
 `docs/agent-loop-skill-pack-standard.md`. The public hook is not a new agent
@@ -91,6 +93,7 @@ loop-pack/
     loop-state.md
     loop-decisions.md
     loop-contract.md
+    loop-prompts.md
     loop-runs/.gitkeep
   skills/
     loop-triage/SKILL.md
@@ -113,6 +116,7 @@ For Codex:
 loop-state.md
 loop-decisions.md
 loop-contract.md
+loop-prompts.md
 loop-runs/
 ```
 
@@ -130,6 +134,7 @@ For Claude:
 loop-state.md
 loop-decisions.md
 loop-contract.md
+loop-prompts.md
 loop-runs/
 ```
 
@@ -171,6 +176,13 @@ permission boundaries, and secret exposure risk.
 - no marker text remains
 - no obvious secret-looking values are present
 
+### Prompt Command
+
+`loop-anything prompt` prints stage-specific handoff prompts for Codex and
+Claude. It makes the package useful even before a scheduled automation exists:
+operators can copy the next-stage prompt directly from the CLI or from
+`loop-prompts.md`.
+
 ## MVP File Tree
 
 ```text
@@ -184,12 +196,14 @@ src/
   detect.js
   render.js
   check.js
+  prompts.js
 templates/
   loop-pack/
     manifest.json
     shared/loop-state.md
     shared/loop-decisions.md
     shared/loop-contract.md
+    shared/loop-prompts.md
     skills/loop-triage/SKILL.md
     skills/loop-review/SKILL.md
     skills/loop-prove/SKILL.md
@@ -235,19 +249,31 @@ Output:
 - file paths with exact failures
 - non-zero exit when required files or proof fields are missing
 
+### `prompt`
+
+Inputs:
+
+- `--agent codex|claude|both`, default `both`
+- `--stage triage|review|prove|record|resume`, default `triage`
+
+Output:
+
+- stage-specific Codex and/or Claude prompt text
+
 ## Non-Goals
 
 - No background daemon.
 - No hosted service.
 - No secret storage.
 - No MCP server in v0.
-- No npm publication in the initial GitHub release.
+- No registry-specific install claims unless the package has been published
+  there.
 - No pretending Codex and Claude have identical config surfaces.
 - No internal permission or sleep-run notes in the public repo.
 
 ## First Release Definition
 
-Publish `rossinsilico/loop-anything` when:
+Release `loop-anything` when:
 
 1. `node bin/loop-anything.js init --dry-run` works.
 2. `node bin/loop-anything.js init --agent both --dir /tmp/loop-anything-test`

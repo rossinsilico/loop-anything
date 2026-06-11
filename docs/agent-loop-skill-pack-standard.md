@@ -33,6 +33,7 @@ loop-pack/
     loop-state.md
     loop-decisions.md
     loop-contract.md
+    loop-prompts.md
     loop-runs/.gitkeep
   skills/
     loop-triage/SKILL.md
@@ -50,10 +51,10 @@ The manifest describes the pack without depending on one agent vendor.
 ```json
 {
   "name": "loop-anything",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Bounded agent loop scaffold with visible state, review, and proof.",
   "skills": ["loop-triage", "loop-review", "loop-prove", "loop-record"],
-  "state": ["loop-state.md", "loop-decisions.md", "loop-contract.md"],
+  "state": ["loop-state.md", "loop-decisions.md", "loop-contract.md", "loop-prompts.md"],
   "reviewers": ["loop-reviewer"],
   "stages": ["observe", "triage", "plan", "act", "review", "prove", "record", "stop"],
   "targets": ["codex", "claude"]
@@ -68,6 +69,7 @@ Shared state files are copied to the repository root by default:
 loop-state.md
 loop-decisions.md
 loop-contract.md
+loop-prompts.md
 loop-runs/
 ```
 
@@ -118,6 +120,10 @@ The v0 installer generates four stage skills:
 - `loop-prove`: run and record the proof command
 - `loop-record`: update state and next action
 
+It also generates `loop-prompts.md`, a human-readable prompt menu for Codex and
+Claude stage handoffs. The same text is available through
+`loop-anything prompt`.
+
 ## Codex Install Spec
 
 Codex project skills install under `.agents/skills`.
@@ -134,6 +140,7 @@ Codex project skills install under `.agents/skills`.
 loop-state.md
 loop-decisions.md
 loop-contract.md
+loop-prompts.md
 loop-runs/
 ```
 
@@ -174,6 +181,7 @@ personal workflows that should be available across repositories.
 - `loop-state.md` includes `Current Goal`, `Queue`, `Proof History`, and
   `Next Action`
 - `loop-contract.md` includes the stage order
+- `loop-prompts.md` includes Codex and Claude triage prompts
 
 ## Claude Install Spec
 
@@ -193,6 +201,7 @@ Claude project skills install under `.claude/skills`.
 loop-state.md
 loop-decisions.md
 loop-contract.md
+loop-prompts.md
 loop-runs/
 ```
 
@@ -235,6 +244,7 @@ operator habits.
 - `loop-state.md` includes `Current Goal`, `Queue`, `Proof History`, and
   `Next Action`
 - `loop-contract.md` includes the stage order
+- `loop-prompts.md` includes Codex and Claude triage prompts
 
 ## Both-Target Install Spec
 
@@ -248,6 +258,7 @@ state set:
 loop-state.md           shared state board
 loop-decisions.md       shared decisions
 loop-contract.md        shared stage contract
+loop-prompts.md         shared prompt menu
 loop-runs/              optional run notes
 ```
 
@@ -276,28 +287,28 @@ With `--force`:
 ### Codex Only
 
 ```bash
-npx github:rossinsilico/loop-anything init --agent codex
-npx github:rossinsilico/loop-anything check --agent codex
+npx loop-anything init --agent codex
+npx loop-anything check --agent codex
 ```
 
 ### Claude Only
 
 ```bash
-npx github:rossinsilico/loop-anything init --agent claude
-npx github:rossinsilico/loop-anything check --agent claude
+npx loop-anything init --agent claude
+npx loop-anything check --agent claude
 ```
 
 ### Both
 
 ```bash
-npx github:rossinsilico/loop-anything init --agent both
-npx github:rossinsilico/loop-anything check --agent both
+npx loop-anything init --agent both
+npx loop-anything check --agent both
 ```
 
 ### Dry Run
 
 ```bash
-npx github:rossinsilico/loop-anything init --agent both --dry-run
+npx loop-anything init --agent both --dry-run
 ```
 
 ## Compatibility Notes

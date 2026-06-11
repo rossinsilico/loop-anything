@@ -3,7 +3,13 @@ const path = require("path");
 
 const TEMPLATE_ROOT = path.resolve(__dirname, "..", "templates", "loop-pack");
 const STAGE_SKILLS = ["loop-triage", "loop-review", "loop-prove", "loop-record"];
-const SHARED_FILES = ["loop-state.md", "loop-decisions.md", "loop-contract.md", "loop-runs/.gitkeep"];
+const SHARED_FILES = [
+  "loop-state.md",
+  "loop-decisions.md",
+  "loop-contract.md",
+  "loop-prompts.md",
+  "loop-runs/.gitkeep"
+];
 
 function installLoop(options) {
   const agent = options.agent || "both";

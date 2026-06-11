@@ -23,6 +23,13 @@ test("parseArgs rejects unknown agent values", () => {
   );
 });
 
+test("parseArgs accepts prompt stage arguments", () => {
+  const args = parseArgs(["prompt", "--agent", "claude", "--stage", "review"]);
+  assert.equal(args.command, "prompt");
+  assert.equal(args.agent, "claude");
+  assert.equal(args.stage, "review");
+});
+
 test("dry-run lists planned writes without creating files", () => {
   const dir = makeTempDir();
   const result = installLoop({ agent: "codex", dir, dryRun: true });
@@ -41,6 +48,7 @@ test("install both writes Codex, Claude, and shared state", () => {
   assert.ok(fs.existsSync(path.join(dir, ".claude/agents/loop-reviewer.md")));
   assert.ok(fs.existsSync(path.join(dir, "loop-state.md")));
   assert.ok(fs.existsSync(path.join(dir, "loop-contract.md")));
+  assert.ok(fs.existsSync(path.join(dir, "loop-prompts.md")));
 });
 
 test("check passes for both-agent scaffold", () => {
@@ -69,6 +77,22 @@ test("second install skips existing files by default", () => {
   assert.equal(result.written.length, 0);
   assert.ok(result.skipped.includes("loop-state.md"));
   assert.ok(result.skipped.includes(".agents/skills/loop-prove/SKILL.md"));
+});
+
+test("prompt command prints agent-native stage handoffs", () => {
+  const stdout = createWriter();
+  const stderr = createWriter();
+
+  const code = main(["prompt", "--agent", "both", "--stage", "triage"], {
+    cwd: process.cwd(),
+    stdout,
+    stderr
+  });
+
+  assert.equal(code, 0, stderr.output());
+  assert.match(stdout.output(), /\$loop-triage/);
+  assert.match(stdout.output(), /\/loop-triage/);
+  assert.match(stdout.output(), /loop-state\.md/);
 });
 
 test("force with backup overwrites generated files and writes backups", () => {
@@ -117,6 +141,13 @@ test("CLI main installs and checks a target directory", () => {
     stderr: createWriter()
   });
   assert.equal(checkCode, 0);
+});
+
+test("README uses package-neutral install commands", () => {
+  const readme = fs.readFileSync(path.resolve(__dirname, "..", "README.md"), "utf8");
+
+  assert.match(readme, /npx loop-anything init --agent both/);
+  assert.doesNotMatch(readme, /npx\s+github:[^\s]+\/loop-anything/);
 });
 
 function makeTempDir() {

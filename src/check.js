@@ -10,6 +10,7 @@ const REQUIRED_STATE_HEADINGS = [
   "## Proof History",
   "## Next Action"
 ];
+const REQUIRED_PROMPT_TEXT = ["$loop-triage", "/loop-triage", "loop-state.md"];
 
 const MARKER_PATTERN = /\b(TBD|TODO|FIXME|INSERT_|YOUR_|PLACEHOLDER)\b/;
 const SECRET_PATTERNS = [
@@ -51,6 +52,16 @@ function checkLoop(options) {
     const contract = fs.readFileSync(contractPath, "utf8");
     if (!contract.includes("observe -> triage -> plan -> act -> review -> prove -> record -> stop")) {
       failures.push("loop-contract.md missing stage order");
+    }
+  }
+
+  const promptsPath = path.join(dir, stateDir, "loop-prompts.md");
+  if (fs.existsSync(promptsPath)) {
+    const prompts = fs.readFileSync(promptsPath, "utf8");
+    for (const text of REQUIRED_PROMPT_TEXT) {
+      if (!prompts.includes(text)) {
+        failures.push(`loop-prompts.md missing text: ${text}`);
+      }
     }
   }
 

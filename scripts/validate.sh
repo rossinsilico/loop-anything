@@ -16,6 +16,7 @@ package.json
 bin/loop-anything.js
 src/cli.js
 src/detect.js
+src/prompts.js
 src/render.js
 src/check.js
 docs/agent-loop-skill-pack-standard.md
@@ -25,6 +26,7 @@ templates/loop-pack/manifest.json
 templates/loop-pack/shared/loop-state.md
 templates/loop-pack/shared/loop-decisions.md
 templates/loop-pack/shared/loop-contract.md
+templates/loop-pack/shared/loop-prompts.md
 templates/loop-pack/skills/loop-triage/SKILL.md
 templates/loop-pack/skills/loop-review/SKILL.md
 templates/loop-pack/skills/loop-prove/SKILL.md
@@ -50,10 +52,16 @@ npm test
 
 node bin/loop-anything.js init --agent both --dir "$target"
 node bin/loop-anything.js check --agent both --dir "$target"
+node bin/loop-anything.js prompt --agent both --stage triage > "$tmp_root/prompt.txt"
 node bin/loop-anything.js init --agent both --dir "$target" > "$tmp_root/second-init.txt"
 
 if ! grep -q 'skipped existing:' "$tmp_root/second-init.txt"; then
   printf 'expected second init to skip existing files\n' >&2
+  exit 1
+fi
+
+if ! grep -q '\$loop-triage' "$tmp_root/prompt.txt" || ! grep -q '/loop-triage' "$tmp_root/prompt.txt"; then
+  printf 'expected prompt command to print Codex and Claude triage prompts\n' >&2
   exit 1
 fi
 

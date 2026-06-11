@@ -1,6 +1,7 @@
 const { detectProject } = require("./detect");
 const { installLoop } = require("./render");
 const { checkLoop } = require("./check");
+const { renderPrompt, STAGES } = require("./prompts");
 const { version } = require("../package.json");
 
 const VALID_AGENTS = new Set(["codex", "claude", "both"]);
@@ -11,10 +12,12 @@ function printHelp(stdout) {
 Usage:
   loop-anything init [--agent codex|claude|both] [--dir path] [--state-dir path] [--dry-run] [--force] [--backup]
   loop-anything check [--agent codex|claude|both] [--dir path] [--state-dir path]
+  loop-anything prompt [--agent codex|claude|both] [--stage triage|review|prove|record|resume]
 
 Commands:
   init    Install loop orchestration files into a project
   check   Validate an installed loop scaffold
+  prompt  Print an agent-native prompt for a loop stage
 
 Options:
   --agent      Target agent layout. Defaults to both
@@ -23,6 +26,7 @@ Options:
   --dry-run    Print planned writes without creating files
   --force      Overwrite generated files
   --backup     Save .bak copies when used with --force
+  --stage      Prompt stage. Defaults to triage
   --help       Show this help
   --version    Show version
 `);
@@ -37,6 +41,7 @@ function parseArgs(argv) {
     dryRun: false,
     force: false,
     backup: false,
+    stage: "triage",
     help: false,
     version: false
   };
@@ -75,6 +80,9 @@ function parseArgs(argv) {
     } else if (token === "--state-dir") {
       index += 1;
       args.stateDir = requireValue(token, argv[index]);
+    } else if (token === "--stage") {
+      index += 1;
+      args.stage = requireValue(token, argv[index]);
     } else {
       throw new Error(`Unknown option: ${token}`);
     }
@@ -82,6 +90,9 @@ function parseArgs(argv) {
 
   if (!VALID_AGENTS.has(args.agent)) {
     throw new Error(`Invalid --agent value: ${args.agent}`);
+  }
+  if (!STAGES.has(args.stage)) {
+    throw new Error(`Invalid --stage value: ${args.stage}`);
   }
 
   return args;
@@ -131,6 +142,11 @@ function main(argv, io) {
       });
       printCheckResult(result, io.stdout, io.stderr);
       return result.ok ? 0 : 1;
+    }
+
+    if (args.command === "prompt") {
+      io.stdout.write(`${renderPrompt({ agent: args.agent, stage: args.stage })}\n`);
+      return 0;
     }
 
     throw new Error(`Unknown command: ${args.command}`);

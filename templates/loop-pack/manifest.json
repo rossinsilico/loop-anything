@@ -1,9 +1,9 @@
 {
   "name": "loop-anything",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Bounded agent loop scaffold with visible state, review, and proof.",
   "skills": ["loop-triage", "loop-review", "loop-prove", "loop-record"],
-  "state": ["loop-state.md", "loop-decisions.md", "loop-contract.md"],
+  "state": ["loop-state.md", "loop-decisions.md", "loop-contract.md", "loop-prompts.md"],
   "reviewers": ["loop-reviewer"],
   "stages": ["observe", "triage", "plan", "act", "review", "prove", "record", "stop"],
   "targets": ["codex", "claude"]
