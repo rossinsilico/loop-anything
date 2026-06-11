@@ -63,8 +63,10 @@ test("install both writes Codex, Claude, and shared state", () => {
   const result = installLoop({ agent: "both", dir });
 
   assert.equal(result.skipped.length, 0);
+  assert.ok(fs.existsSync(path.join(dir, ".agents/skills/loop-anything/SKILL.md")));
   assert.ok(fs.existsSync(path.join(dir, ".agents/skills/loop-triage/SKILL.md")));
   assert.ok(fs.existsSync(path.join(dir, ".agents/skills/loop-dog-food/SKILL.md")));
+  assert.ok(fs.existsSync(path.join(dir, ".claude/skills/loop-anything/SKILL.md")));
   assert.ok(fs.existsSync(path.join(dir, ".claude/skills/loop-record/SKILL.md")));
   assert.ok(fs.existsSync(path.join(dir, ".claude/skills/loop-dog-food/SKILL.md")));
   assert.ok(fs.existsSync(path.join(dir, ".claude/agents/loop-reviewer.md")));
@@ -128,8 +130,8 @@ test("dog-food command prints object-scoped loop handoffs", () => {
   });
 
   assert.equal(code, 0, stderr.output());
-  assert.match(stdout.output(), /\$loop-anything\.dog-food spec/);
-  assert.match(stdout.output(), /\/loop-anything\.dog-food spec/);
+  assert.match(stdout.output(), /\$loop-anything dog-food spec --turn single/);
+  assert.match(stdout.output(), /\/loop-anything dog-food spec --turn single/);
   assert.match(stdout.output(), /Turn budget: single/);
   assert.match(stdout.output(), /loop-state\.md/);
 });

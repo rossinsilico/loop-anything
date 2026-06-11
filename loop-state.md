@@ -36,6 +36,7 @@ package's own loop checks.
 | 2026-06-11 | `node bin/loop-anything.js check --agent both` | pass | Self-installed repo scaffold passed |
 | 2026-06-11 | `npm test` | pass | 17 tests passed for `dog-food` command family |
 | 2026-06-11 | `sh scripts/validate.sh` | pass | v0.3 dogfood smoke passed with temp npm cache |
+| 2026-06-11 | `sh scripts/validate.sh` | pass | v0.3.1 front-door `$loop-anything` skill smoke passed |
 
 ## Decisions
 
@@ -46,6 +47,8 @@ package's own loop checks.
 - Keep the npm package payload lean while allowing the GitHub repo to dogfood its own loop files.
 - Treat `dog-food` as the main command; keep `init`, `check`, and `prompt` as supporting plumbing.
 - Keep validation hermetic by using a temp npm cache during package smoke.
+- Generate and install a real `loop-anything` skill; do not document dotted
+  pseudo-skill invocations that Codex cannot discover.
 
 ## Next Action
 

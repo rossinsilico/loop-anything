@@ -77,8 +77,10 @@ permission boundary, and secret exposure risk.
 
 ## Stage Skills
 
-The first release ships four high-leverage stage skills:
+The first release ships six high-leverage skills:
 
+- `loop-anything`: branded front door for dog-food, create, run, and prompt
+- `loop-dog-food`: turn a work object into a bounded loop
 - `loop-triage`: choose one bounded task
 - `loop-review`: check state, diff, permissions, and secret risk
 - `loop-prove`: run and record the proof command

@@ -44,7 +44,7 @@ function createDogFoodState(options) {
 }
 
 function renderTargetPrompt({ target, object, turn, stage, method }) {
-  const invocation = `${target === "codex" ? "$" : "/"}loop-anything.dog-food ${object}`;
+  const invocation = `${target === "codex" ? "$" : "/"}loop-anything dog-food ${object} --turn ${turn}`;
   return `${labelFor(target)}:
 ${invocation}
 Method: ${method}

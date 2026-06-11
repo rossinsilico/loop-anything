@@ -36,6 +36,7 @@ loop-pack/
     loop-prompts.md
     loop-runs/.gitkeep
   skills/
+    loop-anything/SKILL.md
     loop-dog-food/SKILL.md
     loop-triage/SKILL.md
     loop-review/SKILL.md
@@ -52,9 +53,9 @@ The manifest describes the pack without depending on one agent vendor.
 ```json
 {
   "name": "loop-anything",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Bounded agent loop scaffold with visible state, review, and proof.",
-  "skills": ["loop-dog-food", "loop-triage", "loop-review", "loop-prove", "loop-record"],
+  "skills": ["loop-anything", "loop-dog-food", "loop-triage", "loop-review", "loop-prove", "loop-record"],
   "state": ["loop-state.md", "loop-decisions.md", "loop-contract.md", "loop-prompts.md"],
   "reviewers": ["loop-reviewer"],
   "stages": ["observe", "triage", "plan", "act", "review", "prove", "record", "stop"],
@@ -114,8 +115,9 @@ The contract turns a folder scaffold into an orchestration system. It tells the
 agent what each stage reads, what each stage writes, which proof is required,
 and when the loop must stop for human input.
 
-The v0 installer generates five skills:
+The v0 installer generates six skills:
 
+- `loop-anything`: branded front door for dog-food, create, run, and prompt
 - `loop-dog-food`: turn a work object into a bounded loop
 - `loop-triage`: choose one bounded task
 - `loop-review`: check state, diff, permissions, and secret risk
@@ -135,6 +137,7 @@ Codex project skills install under `.agents/skills`.
 ```text
 .agents/
   skills/
+    loop-anything/SKILL.md
     loop-dog-food/SKILL.md
     loop-triage/SKILL.md
     loop-review/SKILL.md
@@ -152,6 +155,7 @@ loop-runs/
 ```text
 $HOME/.agents/
   skills/
+    loop-anything/SKILL.md
     loop-dog-food/SKILL.md
     loop-triage/SKILL.md
     loop-review/SKILL.md
@@ -176,6 +180,7 @@ personal workflows that should be available across repositories.
 
 `loop-anything check --agent codex` should verify:
 
+- `.agents/skills/loop-anything/SKILL.md` exists
 - `.agents/skills/loop-triage/SKILL.md` exists
 - `.agents/skills/loop-dog-food/SKILL.md` exists
 - `.agents/skills/loop-review/SKILL.md` exists
@@ -197,6 +202,7 @@ Claude project skills install under `.claude/skills`.
 ```text
 .claude/
   skills/
+    loop-anything/SKILL.md
     loop-dog-food/SKILL.md
     loop-triage/SKILL.md
     loop-review/SKILL.md
@@ -216,6 +222,7 @@ loop-runs/
 ```text
 $HOME/.claude/
   skills/
+    loop-anything/SKILL.md
     loop-dog-food/SKILL.md
     loop-triage/SKILL.md
     loop-review/SKILL.md
@@ -241,6 +248,7 @@ operator habits.
 
 `loop-anything check --agent claude` should verify:
 
+- `.claude/skills/loop-anything/SKILL.md` exists
 - `.claude/skills/loop-triage/SKILL.md` exists
 - `.claude/skills/loop-dog-food/SKILL.md` exists
 - `.claude/skills/loop-review/SKILL.md` exists

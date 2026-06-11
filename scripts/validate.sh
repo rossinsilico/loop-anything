@@ -29,6 +29,7 @@ templates/loop-pack/shared/loop-state.md
 templates/loop-pack/shared/loop-decisions.md
 templates/loop-pack/shared/loop-contract.md
 templates/loop-pack/shared/loop-prompts.md
+templates/loop-pack/skills/loop-anything/SKILL.md
 templates/loop-pack/skills/loop-dog-food/SKILL.md
 templates/loop-pack/skills/loop-triage/SKILL.md
 templates/loop-pack/skills/loop-review/SKILL.md
@@ -70,7 +71,7 @@ if ! grep -q '\$loop-triage' "$tmp_root/prompt.txt" || ! grep -q '/loop-triage' 
   exit 1
 fi
 
-if ! grep -q '\$loop-anything.dog-food spec' "$tmp_root/dog-food.txt" || ! grep -q '/loop-anything.dog-food spec' "$tmp_root/dog-food.txt"; then
+if ! grep -q '\$loop-anything dog-food spec --turn single' "$tmp_root/dog-food.txt" || ! grep -q '/loop-anything dog-food spec --turn single' "$tmp_root/dog-food.txt"; then
   printf 'expected dog-food command to print Codex and Claude dogfood prompts\n' >&2
   exit 1
 fi

@@ -44,6 +44,7 @@ For Codex:
 
 ```text
 .agents/skills/loop-triage/SKILL.md
+.agents/skills/loop-anything/SKILL.md
 .agents/skills/loop-dog-food/SKILL.md
 .agents/skills/loop-review/SKILL.md
 .agents/skills/loop-prove/SKILL.md
@@ -54,6 +55,7 @@ For Claude:
 
 ```text
 .claude/skills/loop-triage/SKILL.md
+.claude/skills/loop-anything/SKILL.md
 .claude/skills/loop-dog-food/SKILL.md
 .claude/skills/loop-review/SKILL.md
 .claude/skills/loop-prove/SKILL.md
@@ -164,6 +166,7 @@ Prints an agent-native handoff prompt for the next loop stage. Codex gets
 Loop Anything is useful because it adds a little process, not a lot of runtime.
 The process is the product.
 
+- `loop-anything`: branded front door for dog-food, create, run, and prompt
 - `loop-dog-food`: turn a work object into a bounded loop
 - `loop-triage`: choose one bounded task and name the proof command
 - `loop-review`: check scope, diff, permissions, and secret risk

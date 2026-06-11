@@ -102,6 +102,7 @@ loop-pack/
     loop-prompts.md
     loop-runs/.gitkeep
   skills/
+    loop-anything/SKILL.md
     loop-dog-food/SKILL.md
     loop-triage/SKILL.md
     loop-review/SKILL.md
@@ -116,6 +117,7 @@ For Codex:
 ```text
 .agents/
   skills/
+    loop-anything/SKILL.md
     loop-dog-food/SKILL.md
     loop-triage/SKILL.md
     loop-review/SKILL.md
@@ -133,6 +135,7 @@ For Claude:
 ```text
 .claude/
   skills/
+    loop-anything/SKILL.md
     loop-dog-food/SKILL.md
     loop-triage/SKILL.md
     loop-review/SKILL.md
@@ -166,8 +169,8 @@ active task, proof history, and next action.
 
 ### Stage Skills
 
-Stage skills govern one part of the loop. The package ships `loop-dog-food`,
-`loop-triage`, `loop-review`, `loop-prove`, and `loop-record`.
+Stage skills govern one part of the loop. The package ships `loop-anything`,
+`loop-dog-food`, `loop-triage`, `loop-review`, `loop-prove`, and `loop-record`.
 
 ### Dog Food Command
 
@@ -225,6 +228,7 @@ templates/
     shared/loop-decisions.md
     shared/loop-contract.md
     shared/loop-prompts.md
+    skills/loop-anything/SKILL.md
     skills/loop-dog-food/SKILL.md
     skills/loop-triage/SKILL.md
     skills/loop-review/SKILL.md
@@ -316,7 +320,7 @@ Release `loop-anything` when:
 2. `node bin/loop-anything.js init --agent both --dir /tmp/loop-anything-test`
    writes the expected files.
 3. `node bin/loop-anything.js check --dir /tmp/loop-anything-test` exits 0.
-4. Generated files include the loop contract and five skills:
+4. Generated files include the loop contract and six skills: `loop-anything`,
    `loop-dog-food`, `loop-triage`, `loop-review`, `loop-prove`, and
    `loop-record`.
 5. `npm test`, `sh scripts/validate.sh`, and `npm pack --dry-run` pass.
